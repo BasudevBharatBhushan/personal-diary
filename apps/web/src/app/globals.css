@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+/*
+ * Theme tokens. Fonts are wired to CSS variables set by next/font in
+ * layout.tsx (--font-baloo, --font-nunito). Defining --font-* here gives us
+ * Tailwind utilities `font-heading` / `font-body` for free (Tailwind v4).
+ */
+@theme inline {
+  --font-heading: var(--font-baloo), "Baloo 2", sans-serif;
+  --font-body: var(--font-nunito), "Nunito", sans-serif;
+}
+
+html {
+  /* Soft, warm background — a light cream, never clinical white. */
+  background-color: #fffaf0;
+}
+
+body {
+  font-family: var(--font-body);
+  color: #3f3a36;
+  /* Prevent any accidental horizontal scroll on mobile. */
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading);
+}

@@ -1,0 +1,15 @@
+{
+  "name": "@b3os/core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Framework-agnostic domain types, data, and time engine for B3 OS. Consumed directly as TypeScript source (no build step) via Next.js transpilePackages.",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  }
+}

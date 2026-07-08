@@ -1,0 +1,14 @@
+{
+  "name": "b3-os",
+  "private": true,
+  "description": "B3 OS — personal operating system. Monorepo root. Uses pnpm workspaces (enabled via `corepack enable pnpm`).",
+  "scripts": {
+    "dev": "pnpm --filter @b3os/web dev",
+    "build": "pnpm --filter @b3os/web build",
+    "typecheck": "pnpm --filter @b3os/web typecheck"
+  },
+  "packageManager": "pnpm@11.10.0",
+  "engines": {
+    "node": ">=22"
+  }
+}
