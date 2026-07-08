@@ -1,7 +1,9 @@
 "use client";
 
-import { getCurrentBlock, getNextBlock, getPhaseMessage } from "@b3os/core";
+import { useEffect, useRef } from "react";
+import { getCurrentBlock, getGreetingSentence, getNextBlock, getPhaseMessage } from "@b3os/core";
 import { useNow } from "@/hooks/useNow";
+import { useSpeak } from "@/hooks/useSpeak";
 
 const DATE_FORMAT = new Intl.DateTimeFormat("en-IN", {
   timeZone: "Asia/Kolkata",
@@ -25,6 +27,26 @@ const TIME_FORMAT = new Intl.DateTimeFormat("en-IN", {
  */
 export function Header() {
   const now = useNow(60_000);
+  const { supported, speak } = useSpeak();
+  const hasGreetedRef = useRef(false);
+
+  // Browsers only let speech synthesis produce sound after a user gesture
+  // on the page, so a plain speak-on-mount call is silently swallowed.
+  // Greet on the very first interaction anywhere on the page instead —
+  // the closest thing to "on load" that actually works.
+  useEffect(() => {
+    if (!supported) return;
+
+    const greetOnce = () => {
+      if (hasGreetedRef.current) return;
+      hasGreetedRef.current = true;
+      speak(getGreetingSentence(new Date()));
+    };
+
+    const events = ["pointerdown", "keydown", "touchstart"] as const;
+    events.forEach((event) => document.addEventListener(event, greetOnce));
+    return () => events.forEach((event) => document.removeEventListener(event, greetOnce));
+  }, [supported, speak]);
 
   return (
     <header className="sticky top-0 z-20 border-b border-stone-200 bg-white/90 px-4 py-3 backdrop-blur sm:px-6">
@@ -40,13 +62,13 @@ export function Header() {
           )}
         </div>
 
-        {now ? <HeaderStatus now={now} /> : null}
+        {now ? <HeaderStatus now={now} onReplay={supported ? () => speak(getGreetingSentence(now)) : undefined} /> : null}
       </div>
     </header>
   );
 }
 
-function HeaderStatus({ now }: { now: Date }) {
+function HeaderStatus({ now, onReplay }: { now: Date; onReplay?: () => void }) {
   const current = getCurrentBlock(now);
   const next = getNextBlock(now);
   const message = getPhaseMessage(current.phase);
@@ -57,7 +79,20 @@ function HeaderStatus({ now }: { now: Date }) {
         {message.emoji} {current.label}
       </span>
       <span className="text-stone-400">Next: {next.label}</span>
-      <span className="text-stone-500 italic">{message.lines.join(" ")}</span>
+      <span className="animate-pulse bg-gradient-to-r from-pink-500 via-purple-500 to-sky-500 bg-clip-text font-semibold text-transparent">
+        ✨ {getGreetingSentence(now)}
+      </span>
+      {onReplay ? (
+        <button
+          type="button"
+          onClick={onReplay}
+          aria-label="Read the greeting aloud"
+          title="Read aloud"
+          className="cursor-pointer rounded-full px-1.5 py-0.5 text-stone-400 transition-colors hover:bg-sky-50 hover:text-sky-600"
+        >
+          🔊
+        </button>
+      ) : null}
     </div>
   );
 }

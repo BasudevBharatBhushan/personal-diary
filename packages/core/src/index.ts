@@ -2,6 +2,7 @@ export * from "./types";
 export * from "./schedule";
 export * from "./messages";
 export * from "./time";
+export * from "./greeting";
 export * from "./food";
 export * from "./sundayReset";
 export * from "./rules";
