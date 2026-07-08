@@ -4,4 +4,5 @@ export const STORAGE_KEYS = {
   tomorrowCard: "b3os:tomorrowCard",
   notes: "b3os:notes",
   sundayReset: "b3os:sundayReset",
+  location: "b3os:location",
 } as const;

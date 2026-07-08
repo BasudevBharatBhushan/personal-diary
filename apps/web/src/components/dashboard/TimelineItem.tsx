@@ -1,4 +1,4 @@
-import type { TimelineBlock } from "@b3os/core";
+import { getPhaseMessage, type TimelineBlock } from "@b3os/core";
 import { cn } from "@/lib/cn";
 
 /** Where a block sits relative to "now": already happened, happening now, or upcoming. */
@@ -22,6 +22,7 @@ function formatTime(hhmm: string): string {
 export function TimelineItem({ block, status }: TimelineItemProps) {
   const isCurrent = status === "current";
   const isPast = status === "past";
+  const emoji = getPhaseMessage(block.phase).emoji;
 
   return (
     <li
@@ -51,6 +52,9 @@ export function TimelineItem({ block, status }: TimelineItemProps) {
                 : "font-medium text-stone-700",
           )}
         >
+          <span aria-hidden className={cn(isPast && "opacity-50")}>
+            {emoji}
+          </span>{" "}
           {block.label}
         </p>
       </div>

@@ -2,6 +2,7 @@
 
 import { getCurrentBlock, getNextBlock, getPhaseMessage } from "@b3os/core";
 import { Card } from "@/components/ui/Card";
+import { useCurrentLocation } from "@/hooks/useCurrentLocation";
 import { useNow } from "@/hooks/useNow";
 
 const TIME_FORMAT = new Intl.DateTimeFormat("en-IN", {
@@ -19,6 +20,7 @@ const TIME_FORMAT = new Intl.DateTimeFormat("en-IN", {
  */
 export function CurrentStatusCard() {
   const now = useNow();
+  const location = useCurrentLocation();
 
   if (!now) {
     return (
@@ -38,7 +40,7 @@ export function CurrentStatusCard() {
 
   return (
     <Card accent="sky">
-      <p className="text-sm font-medium text-sky-600">Right now in Kolkata</p>
+      <p className="text-sm font-medium text-sky-600">📍 Right now in {location}</p>
       <p className="font-heading text-4xl font-bold text-sky-700 sm:text-5xl">
         {TIME_FORMAT.format(now)}
       </p>
