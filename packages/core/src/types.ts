@@ -93,3 +93,44 @@ export interface Note {
 export interface SundayResetState {
   checked: Record<string, boolean>;
 }
+
+/** A reflection question the user can add/edit/delete. */
+export type QuestionType = "text" | "yesno" | "scale";
+
+export interface Question {
+  id: string;
+  prompt: string;
+  type: QuestionType;
+  emoji: string | null;
+  allowDetail: boolean;
+  position: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** One answer inside a day's reflection. Self-describing (snapshots prompt+type) for later analysis. */
+export interface Answer {
+  questionId: string;
+  prompt: string;
+  type: QuestionType;
+  value: string | boolean | number;
+  detail: string | null;
+}
+
+/** One reflection entry per date. */
+export interface DailyEntry {
+  id: string;
+  entryDate: string; // "YYYY-MM-DD" in Asia/Kolkata
+  answers: Answer[];
+  createdAt: string;
+}
+
+/** A journal post with optional embedded photos (served as signed URLs). */
+export interface JournalEntry {
+  id: string;
+  body: string;
+  photoUrls: string[];
+  createdAt: string;
+  updatedAt: string;
+}

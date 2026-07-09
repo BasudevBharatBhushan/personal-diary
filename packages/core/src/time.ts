@@ -84,3 +84,16 @@ export function getPhaseMessage(phase: Phase): PhaseMessage {
  *   isWithinBlock(9 * 60, { start: "23:45", end: "08:00", ... })       -> false (09:00, outside Sleep)
  *   getCurrentBlock(new Date("2026-01-01T02:00:00Z")) // 07:30 IST -> still "sleep" (wraps)
  */
+
+/**
+ * The current calendar date in Asia/Kolkata as a "YYYY-MM-DD" string.
+ * Used as the stable key for one-per-day records regardless of server timezone.
+ */
+export function getKolkataDateKey(now: Date = new Date()): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Kolkata",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(now);
+}
