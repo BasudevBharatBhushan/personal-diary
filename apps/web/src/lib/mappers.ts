@@ -1,7 +1,7 @@
 /**
  * Maps snake_case Supabase rows to the camelCase `@b3os/core` domain types.
  */
-import type { DailyEntry, DecisionPanel, Note, Question, TomorrowCard } from "@b3os/core";
+import type { DailyEntry, DecisionPanel, Note, Question, SundayResetState, TomorrowCard } from "@b3os/core";
 
 // The shapes below intentionally use `any` for the raw DB row — Supabase's
 // generated row types are not wired up in this project, and these mappers
@@ -58,5 +58,12 @@ export function rowToNote(r: any): Note {
     title: r.title,
     content: r.content,
     createdAt: Date.parse(r.created_at),
+  };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function rowToSundayReset(r: any): SundayResetState {
+  return {
+    checked: r.checked ?? {},
   };
 }

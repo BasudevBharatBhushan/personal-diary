@@ -1,30 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { SUNDAY_RESET_ITEMS, STORAGE_KEYS, type SundayResetState } from "@b3os/core";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { SUNDAY_RESET_ITEMS } from "@b3os/core";
+import { useSundayReset } from "@/hooks/useSundayReset";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 
 export function SundayChecklist() {
-  const [state, setState] = useLocalStorage<SundayResetState>(
-    STORAGE_KEYS.sundayReset,
-    { checked: {} },
-  );
+  const { checked, saving, setChecked, resetAll } = useSundayReset();
 
-  const checked = Object.values(state.checked).filter(Boolean).length;
+  const checkedCount = Object.values(checked).filter(Boolean).length;
   const total = SUNDAY_RESET_ITEMS.length;
-
-  const handleCheck = (item: string, isChecked: boolean) => {
-    setState((prev) => ({
-      checked: { ...prev.checked, [item]: isChecked },
-    }));
-  };
-
-  const handleReset = () => {
-    setState({ checked: {} });
-  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -32,7 +18,7 @@ export function SundayChecklist() {
       <Card accent="pink" className="space-y-3">
         <div className="flex items-center justify-between">
           <span className="font-semibold text-stone-700">
-            {checked} / {total} done
+            {checkedCount} / {total} done
           </span>
           <span className="text-lg">🎉</span>
         </div>
@@ -40,9 +26,12 @@ export function SundayChecklist() {
         <div className="h-2 w-full overflow-hidden rounded-full bg-pink-100">
           <div
             className="h-full bg-pink-400 transition-all duration-300"
-            style={{ width: `${(checked / total) * 100}%` }}
+            style={{ width: `${(checkedCount / total) * 100}%` }}
           />
         </div>
+        {saving && (
+          <span className="text-xs text-stone-400">saving…</span>
+        )}
       </Card>
 
       {/* Checklist items */}
@@ -53,10 +42,10 @@ export function SundayChecklist() {
             id={`sunday-${item}`}
             label={item}
             accent="pink"
-            checked={state.checked[item] || false}
-            onChange={(e) => handleCheck(item, e.currentTarget.checked)}
+            checked={checked[item] || false}
+            onChange={(e) => setChecked(item, e.currentTarget.checked)}
             className={
-              state.checked[item]
+              checked[item]
                 ? "bg-pink-50 opacity-70"
                 : ""
             }
@@ -68,7 +57,7 @@ export function SundayChecklist() {
       <Button
         accent="pink"
         variant="soft"
-        onClick={handleReset}
+        onClick={resetAll}
         className="self-start"
       >
         Reset All
